@@ -58,17 +58,6 @@ void createConfig() {
     
 }
 
-// Finds the first object of the specified type
-// This should not be run every frame, the result should be stored and used later
-Il2CppObject* getObjectFromType(Il2CppReflectionType* type) {
-    Array<Il2CppObject*>* objects = *il2cpp_utils::RunMethod<Array<Il2CppObject*>*>(il2cpp_utils::GetClassFromName("UnityEngine","Resources"), "FindObjectsOfTypeAll", type);
-    if(objects) {
-        return objects->values[0];
-    }   else    {
-        return nullptr;
-    }
-}
-
 // Chooses a random "level failed" message from the config
 const char* getFailMessage()    {
     rapidjson::GenericArray messages = getConfig().config["loseMessages"].GetArray();
