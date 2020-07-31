@@ -9,7 +9,7 @@
     ],
     "category": "Gameplay",
     "gameVersion": "1.10.0",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "platform": "Quest",
     "components": [
         {
@@ -20,6 +20,11 @@
             "uninstallAction": {
                 "removeLibraryFile": "libcustom-fail-text.so"
             }
+        },
+        {
+            "type": "FileCopyMod",
+            "sourceFileName": "libbeatsaber-hook_0_2_1",
+            "targetRootedPathAndFileName": "/sdcard/Android/data/com.beatgames.beatsaber/files/libs/libbeatsaber-hook_0_2_1.so"
         }
     ]
 }

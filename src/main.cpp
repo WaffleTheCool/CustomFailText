@@ -79,7 +79,7 @@ const char* getFailMessage()    {
 
 MAKE_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, void, LevelFailedTextEffect* self)    {
     getLogger().info("Setting level failed text . . .");
-    TextMeshPro* textMesh = (TextMeshPro*) CRASH_UNLESS(il2cpp_utils::RunMethod(self, "GetComponent", il2cpp_utils::GetSystemType("TMPro", "TextMeshPro")));
+    TextMeshPro* textMesh = self->GetComponent<TextMeshPro*>();
     textMesh->m_text = il2cpp_utils::createcsstr(getFailMessage());
     textMesh->m_overflowMode = TextOverflowModes::Overflow;
     textMesh->m_enableWordWrapping = false;
