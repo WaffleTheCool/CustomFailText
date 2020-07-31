@@ -23,7 +23,7 @@
         },
         {
             "type": "FileCopyMod",
-            "sourceFileName": "libbeatsaber-hook_0_2_1",
+            "sourceFileName": "libbeatsaber-hook_0_2_1.so",
             "targetRootedPathAndFileName": "/sdcard/Android/data/com.beatgames.beatsaber/files/libs/libbeatsaber-hook_0_2_1.so"
         }
     ]
