@@ -14,11 +14,6 @@
 #include "../include/TMPro/TextMeshPro.hpp"
 #include "../include/TMPro/TextOverflowModes.hpp"
 
-
-using namespace GlobalNamespace;
-using namespace UnityEngine;
-using namespace TMPro;
-
 static ModInfo modInfo;
 static Configuration& getConfig() {
     static Configuration config(modInfo);
@@ -68,10 +63,10 @@ const char* getFailMessage()    {
 
 MAKE_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, void, LevelFailedTextEffect* self)    {
     getLogger().info("Setting level failed text . . .");
-    TextMeshPro* textMesh = self->GetComponent<TextMeshPro*>();
-    textMesh->m_text = il2cpp_utils::createcsstr(getFailMessage());
-    textMesh->m_overflowMode = TextOverflowModes::Overflow;
-    textMesh->m_enableWordWrapping = false;
+    Il2CppObject* textMesh = self->GetComponent<Il2CppObject*>();
+    il2cpp_utils::SetFieldValue(textMesh, "m_text", il2cpp_utils::createcsstr(getFailMessage()));
+    il2cpp_utils::SetFieldValue(textMesh, "m_overflowMode", 0); // 0 = TextOverflowModes::Overflow
+    il2cpp_utils::SetFieldValue(textMesh, "m_enableWordWrapping", false);
     getLogger().info("Text set successfully!");
 
     LevelFailedTextEffect_ShowEffect(self);

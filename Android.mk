@@ -27,8 +27,8 @@ include $(PREBUILT_SHARED_LIBRARY)
 
 # Build the beatsaber-hook shared library, SPECIFICALLY VERSIONED!
 include $(CLEAR_VARS)
-LOCAL_MODULE	        := beatsaber-hook_2019_0_2_1
-LOCAL_SRC_FILES         := ./include/libs/libbeatsaber-hook_0_2_1.so
+LOCAL_MODULE	        := beatsaber-hook_2019_0_3_7
+LOCAL_SRC_FILES         := ./include/libs/libbeatsaber-hook_2019_0_3_7.so
 LOCAL_EXPORT_C_INCLUDES := ./extern/beatsaber-hook/shared/
 include $(PREBUILT_SHARED_LIBRARY)
 
@@ -38,7 +38,7 @@ include $(PREBUILT_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 # Include shared libraries
 LOCAL_SHARED_LIBRARIES += modloader
-LOCAL_SHARED_LIBRARIES += beatsaber-hook_2019_0_2_1
+LOCAL_SHARED_LIBRARIES += beatsaber-hook_2019_0_3_7
 LOCAL_LDLIBS     := -llog
 LOCAL_CFLAGS     := -I'C:/Program Files/Unity/Editor/Data/il2cpp/libil2cpp'
 LOCAL_MODULE     := custom-fail-text
