@@ -8,8 +8,8 @@
         
     ],
     "category": "Gameplay",
-    "gameVersion": "1.10.0",
-    "version": "0.1.1",
+    "gameVersion": "1.11.0",
+    "version": "0.1.2",
     "platform": "Quest",
     "components": [
         {
@@ -22,9 +22,10 @@
             }
         },
         {
-            "type": "FileCopyMod",
-            "sourceFileName": "libbeatsaber-hook_0_2_1.so",
-            "targetRootedPathAndFileName": "/sdcard/Android/data/com.beatgames.beatsaber/files/libs/libbeatsaber-hook_0_2_1.so"
+            "type": "HookModLibrary",
+            "installAction": {
+                "installLibraryFile": "libbeatsaber-hook_2019_0_4_3.so"
+            }
         }
     ]
 }
