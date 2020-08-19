@@ -8,11 +8,6 @@
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"
 #include "../extern/beatsaber-hook/shared/utils/typedefs.h"
 #include "../extern/beatsaber-hook/shared/config/config-utils.hpp"
-#include "../include/GlobalNamespace/LevelFailedTextEffect.hpp"
-#include "../include/UnityEngine/GameObject.hpp"
-#include "../include/UnityEngine/TextMesh.hpp"
-#include "../include/TMPro/TextMeshPro.hpp"
-#include "../include/TMPro/TextOverflowModes.hpp"
 
 static ModInfo modInfo;
 static Configuration& getConfig() {
@@ -46,8 +41,7 @@ void createConfig() {
         }   else    {
             getLogger().warning("Failed to create config");
         }
-    }   else
-    {
+    }   else    {
         getLogger().info("Config file already exists.");
     }
     
@@ -61,12 +55,12 @@ const char* getFailMessage()    {
     return messages[index].GetString();
 }
 
-MAKE_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, void, LevelFailedTextEffect* self)    {
+MAKE_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, void, Il2CppObject* self)    {
     getLogger().info("Setting level failed text . . .");
-    Il2CppObject* textMesh = self->GetComponent<Il2CppObject*>();
-    il2cpp_utils::SetFieldValue(textMesh, "m_text", il2cpp_utils::createcsstr(getFailMessage()));
-    il2cpp_utils::SetFieldValue(textMesh, "m_overflowMode", 0); // 0 = TextOverflowModes::Overflow
-    il2cpp_utils::SetFieldValue(textMesh, "m_enableWordWrapping", false);
+    Il2CppObject* textMesh = CRASH_UNLESS(il2cpp_utils::RunMethodUnsafe<Il2CppObject*>(self, "GetComponent", il2cpp_utils::GetSystemType("TMPro", "TextMeshPro")));
+    CRASH_UNLESS(il2cpp_utils::SetFieldValue(textMesh, "m_text", il2cpp_utils::createcsstr(getFailMessage())));
+    CRASH_UNLESS(il2cpp_utils::SetFieldValue(textMesh, "m_overflowMode", 0)); // 0 = TextOverflowModes::Overflow
+    CRASH_UNLESS(il2cpp_utils::SetFieldValue(textMesh, "m_enableWordWrapping", false));
     getLogger().info("Text set successfully!");
 
     LevelFailedTextEffect_ShowEffect(self);
