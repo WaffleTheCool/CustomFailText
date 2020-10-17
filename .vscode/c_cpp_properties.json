@@ -1,22 +1,25 @@
 {
-    "configurations": [
-        {
-            "name": "Quest",
-            "defines": [
-                "MOD_ID=\"discord-presence\"",
-                "VERSION=\"0.1.0\"",
-                "__GNUC__",
-                "__aarch64__"
-            ],
-            "includePath": [
-                "${workspaceFolder}/**",
-                "C:/Program Files/Unity/Editor/Data/il2cpp/libil2cpp",
-                "C:/ndk/android-ndk-r21d/sysroot/**"
-            ],
-            "cStandard": "c11",
-            "cppStandard": "c++20",
-            "intelliSenseMode": "clang-x64"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "defines": [
+        "MOD_ID=\"custom-fail-text\"",
+        "VERSION=\"0.1.4\"",
+        "__GNUC__",
+        "__aarch64__",
+        "ID=\"custom-fail-text\""
+      ],
+      "includePath": [
+        "${workspaceFolder}/**",
+        "C:/ndk/android-ndk-r21d/sysroot/**",
+        "${workspaceFolder}/shared",
+        "${workspaceFolder}/extern",
+        "${workspaceFolder}/extern/codegen/include/**"
+      ],
+      "name": "Quest",
+      "cStandard": "c11",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "clang-x64"
+    }
+  ],
+  "version": 4
 }

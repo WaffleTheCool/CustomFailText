@@ -1,13 +1,14 @@
-#include "../include/mod_interface.hpp"
 #include <unordered_set>
 #include <string>
-#include "../extern/beatsaber-hook/shared/utils/utils.h"
-#include "../extern/beatsaber-hook/shared/utils/logging.hpp"
-#include "../extern/beatsaber-hook/include/modloader.hpp"
-#include "../extern/beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"
-#include "../extern/beatsaber-hook/shared/utils/typedefs.h"
-#include "../extern/beatsaber-hook/shared/config/config-utils.hpp"
+
+#include "beatsaber-hook/shared/utils/utils.h"
+#include "beatsaber-hook/shared/utils/logging.hpp"
+#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/utils/il2cpp-functions.hpp"
+#include "beatsaber-hook/shared/utils/typedefs.h"
+#include "beatsaber-hook/shared/config/config-utils.hpp"
+
+#include "modloader/shared/modloader.hpp"
 
 static ModInfo modInfo;
 static Configuration& getConfig() {
@@ -32,7 +33,7 @@ void createConfig() {
         rapidjson::Document::AllocatorType& allocator = getConfig().config.GetAllocator();
         rapidjson::Value messagesArray(rapidjson::kArrayType);
         // The default message should tell the user to edit the config
-        messagesArray.PushBack(rapidjson::Value().SetString("<EDIT>\n<CONFIG>"), allocator);
+        messagesArray.PushBack(rapidjson::Value().SetString("REPLACE THIS"), allocator);
         getConfig().config.AddMember("loseMessages", messagesArray, allocator);
 
         getConfig().Write();
@@ -71,7 +72,11 @@ extern "C" void setup(ModInfo& info) {
     info.version = "0.1.0";
     modInfo = info;
     getLogger().info("Modloader name: %s", Modloader::getInfo().name.c_str());
+
+    // Create the default config file
     getConfig().Load();
+    createConfig();
+
     getLogger().info("Completed setup!");
 }
 
@@ -81,5 +86,4 @@ extern "C" void load() {
     // Install our hooks
     INSTALL_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, il2cpp_utils::FindMethodUnsafe("", "LevelFailedTextEffect", "ShowEffect", 0));
     getLogger().info("Installed all hooks!");
-    createConfig();
 }

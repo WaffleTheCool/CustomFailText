@@ -7,5 +7,5 @@ if (-not ($PSVersionTable.PSEdition -eq "Core")) {
 }
 
 & $buildScript NDK_PROJECT_PATH=$PSScriptRoot APP_BUILD_SCRIPT=$PSScriptRoot/Android.mk NDK_APPLICATION_MK=$PSScriptRoot/Application.mk
-Remove-Item .\custom-fail-text_v0.1.3.zip
-Compress-Archive -Path "./libs/arm64-v8a/libcustom-fail-text.so","./bmbfmod.json","./include/libs/libbeatsaber-hook_0_5_7.so" -DestinationPath "./custom-fail-text_v0.1.3.zip" -Update
+
+Compress-Archive -Path "./libs/arm64-v8a/libcustom-fail-text_0_1_4.so", "./libs/arm64-v8a/libbeatsaber-hook_0_7_4.so", "./bmbfmod.json" -DestinationPath "./custom-fail-text_v0.1.4.zip" -Update
