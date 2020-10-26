@@ -19,12 +19,17 @@
       }
     },
     {
-      "id": "modloader",
+      "id": "codegen",
+      "versionRange": "^0.3.4",
+      "additionalData": {}
+    },
+    {
+      "id": "custom-types",
       "versionRange": "*",
       "additionalData": {}
     },
     {
-      "id": "libil2cpp",
+      "id": "questui",
       "versionRange": "*",
       "additionalData": {}
     }

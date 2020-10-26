@@ -19,5 +19,8 @@
 #include "codegen/include/UnityEngine/UI/Button.hpp"
 #include "codegen/include/UnityEngine/Transform.hpp"
 
+#include "custom-types/shared/register.hpp"
+#include "questui/shared/QuestUI.hpp"
+
 Configuration& getConfig();
 const Logger& getLogger();

@@ -7,7 +7,7 @@
     "Allows you to customize the text that appears when you fail a level."
   ],
   "category": "Gameplay",
-  "gameVersion": "1.12.1",
+  "gameVersion": "1.12.2",
   "platform": "Quest",
   "components": [
     {
@@ -22,7 +22,23 @@
     {
       "type": "HookModLibrary",
       "installAction": {
-        "installLibraryFile": "libbeatsaber-hook_0_7_4.so"
+        "installLibraryFile": "libbeatsaber-hook_0_7_8.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libcodegen_0_3_4.so"
+      }
+    },{
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libcustom-types.so"
+      }
+    },{
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libquestui.so"
       }
     }
   ]
