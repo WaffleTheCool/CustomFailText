@@ -59,13 +59,29 @@ void MessageSection::ctor(UnityEngine::RectTransform* parentTransform, Il2CppStr
     }
 }
 
+void onLineTextChange(LineTextChangeData* data, Il2CppString* newValue) {
+    // Change the string to upper case
+    std::string newValueString = to_utf8(csstrtostr(newValue));
+    std::string result = "";
+    for(char letter : newValueString)   {
+        result += std::toupper(letter);
+    }
+
+    // Set the value back
+    data->lineSetting->SetText(il2cpp_utils::createcsstr(result));
+}
+
 // Adds a line to this fail message
 void MessageSection::AddLine(Il2CppString* line)  {
     LineTextChangeData* changeData = CRASH_UNLESS(il2cpp_utils::New<LineTextChangeData*>());
     changeData->message = this;
 
+    // Action for when the text changes
+    auto textChangeAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction_1<Il2CppString*>*>(
+        classof(UnityEngine::Events::UnityAction_1<Il2CppString*>*), changeData, onLineTextChange);
+
     // Make a string setting and add it to the list
-    changeData->lineSetting = QuestUI::BeatSaberUI::CreateStringSetting(linesLayout->get_rectTransform(), "", to_utf8(csstrtostr(line)));
+    changeData->lineSetting = QuestUI::BeatSaberUI::CreateStringSetting(linesLayout->get_rectTransform(), "", to_utf8(csstrtostr(line)), textChangeAction);
     // Set the width
     changeData->lineSetting->GetComponent<UnityEngine::UI::LayoutElement*>()->set_preferredWidth(50.0f);
 
