@@ -101,7 +101,7 @@ void CustomFailTextViewController::DidDeactivate(bool removedFromHierarchy, bool
         // Remove this tab if it was completely empty
         if(result == "") {
             getLogger().info("Removing section . . .");
-            removeAllChildren(section->layout->get_rectTransform());
+            removeAllChildren(section->layout->get_transform());
             continue;
         }
         getLogger().info("Adding fail message \"" + result + "\"");
