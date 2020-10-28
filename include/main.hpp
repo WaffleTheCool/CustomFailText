@@ -21,6 +21,7 @@
 
 #include "custom-types/shared/register.hpp"
 #include "questui/shared/QuestUI.hpp"
+#include "questui/shared/BeatSaberUI.hpp"
 
 Configuration& getConfig();
 const Logger& getLogger();

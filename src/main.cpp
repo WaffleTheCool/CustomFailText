@@ -3,6 +3,10 @@
 using namespace GlobalNamespace;
 using namespace TMPro;
 
+#include "CustomFailTextViewController.hpp"
+#include "MessageSection.hpp"
+using namespace CustomFailText;
+
 // Adds the list of level fail messages to the config file
 void createConfig() {
     if(!getConfig().config.HasMember("loseMessages"))   {
@@ -76,9 +80,14 @@ extern "C" void load() {
     createConfig(); // Add any missing values to the config
 
     getLogger().info("Installing hooks...");
-    //il2cpp_functions::Init();
-    //custom_types::Init();
-    //custom_types::RegisterType<CustomFailTextViewController*>()
+    il2cpp_functions::Init();
+
+    custom_types::Register::RegisterType<MessageSection>();
+    custom_types::Register::RegisterType<LineTextChangeData>();
+    custom_types::Register::RegisterType<CustomFailTextViewController>();
+
+    QuestUI::Init();
+    QuestUI::Register::RegisterModSettingsViewController<CustomFailTextViewController*>(modInfo);
 
     INSTALL_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, il2cpp_utils::FindMethodUnsafe("", "LevelFailedTextEffect", "ShowEffect", 0));
     getLogger().info("Installed all hooks!");

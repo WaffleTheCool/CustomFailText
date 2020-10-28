@@ -5,74 +5,114 @@
 
 #include "UnityEngine/Vector2.hpp"
 #include "UnityEngine/Events/UnityAction.hpp"
+#include "UnityEngine/Transform.hpp"
 
 #include <string>
 #include <string_view>
-#include <set>
+#include <vector>
 
-#include "TextRowData.hpp"
+#include "MessageSection.hpp"
 #include "main.hpp"
 
 using namespace CustomFailText;
 using namespace QuestUI;
 
 DEFINE_CLASS(CustomFailTextViewController);
-DEFINE_CLASS(TextRowData);
 
-static std::set<TextRowData*> currentRows;
+const char* defaultMessage = "REPLACE THIS";
 
-// Called when the user presses the delete button for one fail message in the UI
-void onDeleteButtonPress(TextRowData* data)    {
-    // Destroy both the string setting and the delete button
-    UnityEngine::Object::Destroy(data->deleteButton);
-    UnityEngine::Object::Destroy(data->messageSetting);
-    currentRows.erase(data); // Remove the message from our set
+// Add a new message when the user presses the button
+void onAddMessageButtonClick(CustomFailTextViewController* self)    {
+    self->AddMessage(il2cpp_utils::createcsstr(defaultMessage));
 }
 
-void onTextChange(TextRowData* data, Il2CppString* newValue)    {
+void CustomFailTextViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)    {
+    if(addedToHierarchy && firstActivation) {   
+        getLogger().info("Initialising UI . . .");
 
-}
+        // Create a layout for storing our list of messages
+        UnityEngine::UI::VerticalLayoutGroup* mainLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(get_rectTransform());
+        
+        // Make an action for when the add message button is pressed
+        auto addMessageButtonClickAction = il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction>(
+                il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction*)),
+                this, onAddMessageButtonClick);
 
-void CustomFailTextViewController::DidActivate(bool firstActivation, HMUI::ViewController::ActivationType activationType)    {
-    if(activationType == HMUI::ViewController::ActivationType::AddedToHierarchy && firstActivation) {   
+        // Button to add a new message
+        UnityEngine::UI::Button* addMessageButton = QuestUI::BeatSaberUI::CreateUIButton(mainLayout->get_rectTransform(), "Add Message", "OkButton", addMessageButtonClickAction);
 
-        UnityEngine::UI::HorizontalLayoutGroup* mainLayout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(get_rectTransform());
+        this->messagesLayout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(mainLayout->get_rectTransform());
+        messagesLayout->set_spacing(10.0f);
 
-        UnityEngine::UI::VerticalLayoutGroup* messageEditLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(mainLayout->get_rectTransform());
-        UnityEngine::UI::VerticalLayoutGroup* messageDeleteButtonLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(mainLayout->get_rectTransform());
+        getLogger().info("Layouts created");
 
+        this->messages = List<MessageSection*>::New_ctor();
+        // Loop through each create each row
+        getLogger().info("Creating rows . . .");
         rapidjson::GenericArray loseMessages = getConfig().config["loseMessages"].GetArray();
         for(rapidjson::Value& value : loseMessages) {
             std::string message = value.GetString();
 
-            TextRowData* rowData = CRASH_UNLESS(il2cpp_utils::New<TextRowData*>());
-
-            auto textChangeAction = il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<Il2CppString*>>(
-                il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<Il2CppString*>*)), 
-                rowData, onTextChange);
-
-            auto deleteButtonPressAction = il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction>(
-                il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction*)),
-                rowData, onDeleteButtonPress);
-            
-            rowData->messageSetting = BeatSaberUI::CreateStringSetting(messageEditLayout->get_rectTransform(), "", message, textChangeAction);
-            rowData->deleteButton = BeatSaberUI::CreateUIButton(messageDeleteButtonLayout->get_rectTransform(), "OkButton", deleteButtonPressAction, "Delete", nullptr);
-            currentRows.insert(rowData);
+            // Add a message section for each
+            this->AddMessage(il2cpp_utils::createcsstr(message));
+            getLogger().info("Created fail row with message \"" + message + "\"");
         }
     }
 }
 
+// Adds a new message layout to the UI
+void CustomFailTextViewController::AddMessage(Il2CppString* message)    {
+    MessageSection* section = CRASH_UNLESS(il2cpp_utils::New<MessageSection*>(messagesLayout->get_rectTransform(), message));
+    messages->Add(section);
+}
+
+// Removes all the different UI components in the children of this transform
+// Useful for removing a full message panel
+void removeAllChildren(UnityEngine::Transform* transform)   {
+    Array<UnityEngine::Transform*>* children =  transform->GetComponentsInChildren<UnityEngine::Transform*>();
+
+    for(int i = 0; i < children->Length(); i++)   {
+        UnityEngine::Object::Destroy(children->values[i]->get_gameObject());
+    }
+}
+
 // Upon deactivation, we sabe all messages in the UI back to the config
-void CustomFailTextViewController::DidDeactivate(HMUI::ViewController::DeactivationType deactivationType)    {
+void CustomFailTextViewController::DidDeactivate(bool removedFromHierarchy, bool systemScreenDisabling)    {
+    getLogger().info("Saving messages . . .");
     rapidjson::Document::AllocatorType& allocator = getConfig().config.GetAllocator();
     rapidjson::Value messagesArray(rapidjson::kArrayType);
 
     // Loop through each row in the UI
-    for(TextRowData* row : currentRows) {
-        Il2CppString* value = row->messageSetting->CurrentValue;
-        std::string cppValue = to_utf8(csstrtostr(value));
+    for(int i = 0; i < messages->size; i++) {
+        MessageSection* section = messages->get_Item(i);
+
+        std::string result;
+        // Loop through each line of each message
+        for(int j = 0; j < section->lines->size; j++)    {
+            HMUI::InputFieldView* line = section->lines->get_Item(j);
+
+            // Find the text of this line
+            std::string text = to_utf8(csstrtostr(line->text));
+
+            if(result != "" && text != "") {text = "\n" + text;}
+            result += text;
+        }
+
+        // Remove this tab if it was completely empty
+        if(result == "") {
+            getLogger().info("Removing section . . .");
+            removeAllChildren(section->layout->get_rectTransform());
+            continue;
+        }
+        getLogger().info("Adding fail message \"" + result + "\"");
         // Add each message to the array
-        messagesArray.PushBack(rapidjson::Value().SetString(cppValue.c_str(), cppValue.length()), allocator);
+        messagesArray.PushBack(rapidjson::Value().SetString(result, allocator), allocator);
+    }
+
+    // If there aren't any messages added, add a default one to avoid crashes
+    if(messagesArray.Size() == 0) {
+        AddMessage(il2cpp_utils::createcsstr(defaultMessage));
+        messagesArray.PushBack(rapidjson::Value().SetString(defaultMessage, allocator), allocator);
     }
 
     // Set the array in the config and write it to disk
