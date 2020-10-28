@@ -85,6 +85,7 @@ void CustomFailTextViewController::DidDeactivate(bool removedFromHierarchy, bool
     // Loop through each row in the UI
     for(int i = 0; i < messages->size; i++) {
         MessageSection* section = messages->get_Item(i);
+        if(!section) {continue;} // Skip if this section has been removed
 
         std::string result;
         // Loop through each line of each message
@@ -100,6 +101,7 @@ void CustomFailTextViewController::DidDeactivate(bool removedFromHierarchy, bool
 
         // Remove this tab if it was completely empty
         if(result == "") {
+            messages->set_Item(i, nullptr); // Set this index to a nullptr to indicate it's been removed
             getLogger().info("Removing section . . .");
             removeAllChildren(section->layout->get_transform());
             continue;
