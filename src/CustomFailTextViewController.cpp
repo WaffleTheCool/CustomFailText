@@ -34,8 +34,8 @@ void CustomFailTextViewController::DidActivate(bool firstActivation, bool addedT
         UnityEngine::UI::VerticalLayoutGroup* mainLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(get_rectTransform());
         
         // Make an action for when the add message button is pressed
-        auto addMessageButtonClickAction = il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction>(
-                il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction*)),
+        auto addMessageButtonClickAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction*>(
+                classof(UnityEngine::Events::UnityAction*),
                 this, onAddMessageButtonClick);
 
         // Button to add a new message

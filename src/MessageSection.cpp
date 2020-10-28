@@ -39,8 +39,8 @@ void MessageSection::ctor(UnityEngine::RectTransform* parentTransform, Il2CppStr
     this->linesLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(layout->get_rectTransform());
     linesLayout->GetComponent<UnityEngine::UI::LayoutElement*>()->set_preferredHeight(55.0);
 
-    auto lineAddButtonClickAction = il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction>(
-                il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction*)),
+    auto lineAddButtonClickAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction*>(
+                classof(UnityEngine::Events::UnityAction*),
                 this, onLineAddButtonClick);
 
     // Make a button to add additional lines of text
