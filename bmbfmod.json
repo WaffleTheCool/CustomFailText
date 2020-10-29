@@ -1,7 +1,7 @@
 {
   "id": "custom-fail-text",
   "name": "CustomFailText",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "TheProff#6700",
   "description": [
     "Allows you to customize the text that appears when you fail a level."
@@ -13,10 +13,10 @@
     {
       "type": "HookMod",
       "installAction": {
-        "installLibraryFile": "libcustom-fail-text_0_1_4.so"
+        "installLibraryFile": "libcustom-fail-text_0_1_5.so"
       },
       "uninstallAction": {
-        "removeLibraryFile": "libcustom-fail-text_0_1_4.so"
+        "removeLibraryFile": "libcustom-fail-text_0_1_5.so"
       }
     },
     {
@@ -36,12 +36,14 @@
       "installAction": {
         "installLibraryFile": "libcodegen_0_3_5.so"
       }
-    },{
+    },
+    {
       "type": "HookModLibrary",
       "installAction": {
         "installLibraryFile": "libcustom-types.so"
       }
-    },{
+    },
+    {
       "type": "HookModLibrary",
       "installAction": {
         "installLibraryFile": "libquestui.so"

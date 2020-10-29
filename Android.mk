@@ -52,7 +52,7 @@ LOCAL_SRC_FILES := extern/libquestui.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := custom-fail-text_0_1_4
+LOCAL_MODULE := custom-fail-text_0_1_5
 LOCAL_SRC_FILES += $(call rwildcard,src/,*.cpp)
 LOCAL_SRC_FILES += $(call rwildcard,extern/beatsaber-hook/src/inline-hook,*.cpp)
 LOCAL_SRC_FILES += $(call rwildcard,extern/beatsaber-hook/src/inline-hook,*.c)
@@ -62,7 +62,7 @@ LOCAL_SHARED_LIBRARIES += codegen_0_3_5
 LOCAL_SHARED_LIBRARIES += custom-types
 LOCAL_SHARED_LIBRARIES += questui
 LOCAL_LDLIBS += -llog
-LOCAL_CFLAGS += -I'./extern/libil2cpp/il2cpp/libil2cpp' -DID='"custom-fail-text"' -DVERSION='"0.1.4"' -I'./shared' -I'./extern' -isystem'extern/codegen/include'
+LOCAL_CFLAGS += -I'./extern/libil2cpp/il2cpp/libil2cpp' -DID='"custom-fail-text"' -DVERSION='"0.1.5"' -I'./shared' -I'./extern' -isystem'extern/codegen/include'
 LOCAL_CPPFLAGS += -std=c++2a
 LOCAL_C_INCLUDES += ./include ./src
 include $(BUILD_SHARED_LIBRARY)
