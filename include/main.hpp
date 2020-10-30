@@ -23,5 +23,16 @@
 #include "questui/shared/QuestUI.hpp"
 #include "questui/shared/BeatSaberUI.hpp"
 
+#include "UnityEngine/Transform.hpp"
+#include "UnityEngine/Object.hpp"
+
 Configuration& getConfig();
 const Logger& getLogger();
+
+// Removes all the different UI components in the children of this transform
+// Useful for removing a large section of the UI
+void removeAllChildren(UnityEngine::Transform* transform);
+
+// Constants for limiting the number of messages/lines in the UI
+const int UI_MESSAGE_LIMIT = 6;
+const int MESSAGE_LINE_LIMIT = 3;

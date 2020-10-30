@@ -30,20 +30,26 @@ void CustomFailTextViewController::DidActivate(bool firstActivation, bool addedT
     if(addedToHierarchy && firstActivation) {   
         getLogger().info("Initialising UI . . .");
 
-        // Create a layout for storing our list of messages
+        // Create a layout for storing our list of messages (inside a scroll view so we can fit as many as we want)
         UnityEngine::UI::VerticalLayoutGroup* mainLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(get_rectTransform());
-        
+
         // Make an action for when the add message button is pressed
         auto addMessageButtonClickAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction*>(
                 classof(UnityEngine::Events::UnityAction*),
                 this, onAddMessageButtonClick);
 
         // Button to add a new message
-        UnityEngine::UI::Button* addMessageButton = QuestUI::BeatSaberUI::CreateUIButton(mainLayout->get_rectTransform(), "Add Message", "OkButton", addMessageButtonClickAction);
+        UnityEngine::UI::HorizontalLayoutGroup* addMesssageLayout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(mainLayout->get_rectTransform());
+        UnityEngine::UI::LayoutElement* element = addMesssageLayout->GetComponent<UnityEngine::UI::LayoutElement*>();
+        element->set_preferredWidth(8.0);
+        element->set_preferredHeight(8.0);
 
-        this->messagesLayout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(mainLayout->get_rectTransform());
-        messagesLayout->set_spacing(10.0f);
-
+        this->addMessageButton = QuestUI::BeatSaberUI::CreateUIButton(addMesssageLayout->get_rectTransform(), "Add Message", "OkButton", addMessageButtonClickAction);
+        
+        this->messagesLayout = QuestUI::BeatSaberUI::CreateGridLayoutGroup(mainLayout->get_rectTransform());
+        messagesLayout->set_cellSize(UnityEngine::Vector2(60.0, 35.0));
+        messagesLayout->set_constraint(UnityEngine::UI::GridLayoutGroup::Constraint::FixedColumnCount);
+        messagesLayout->set_constraintCount(3);
         getLogger().info("Layouts created");
 
         this->messages = List<MessageSection*>::New_ctor();
@@ -62,17 +68,18 @@ void CustomFailTextViewController::DidActivate(bool firstActivation, bool addedT
 
 // Adds a new message layout to the UI
 void CustomFailTextViewController::AddMessage(Il2CppString* message)    {
-    MessageSection* section = CRASH_UNLESS(il2cpp_utils::New<MessageSection*>(messagesLayout->get_rectTransform(), message));
+    MessageSection* section = CRASH_UNLESS(il2cpp_utils::New<MessageSection*>(this, messagesLayout->get_rectTransform(), message));
     messages->Add(section);
+    
+    CheckMessageCount();
 }
 
-// Removes all the different UI components in the children of this transform
-// Useful for removing a full message panel
-void removeAllChildren(UnityEngine::Transform* transform)   {
-    Array<UnityEngine::Transform*>* children =  transform->GetComponentsInChildren<UnityEngine::Transform*>();
-
-    for(int i = 0; i < children->Length(); i++)   {
-        UnityEngine::Object::Destroy(children->values[i]->get_gameObject());
+// Enables/Disables the "Add Message" button depending on if we've reached the message limit
+void CustomFailTextViewController::CheckMessageCount()  {
+    addMessageButton->get_gameObject()->SetActive(messages->size < UI_MESSAGE_LIMIT);
+    // Add a generic message if there are no messages left
+    if(messages->size == 0) {
+        onAddMessageButtonClick(this);
     }
 }
 
@@ -90,7 +97,7 @@ void CustomFailTextViewController::DidDeactivate(bool removedFromHierarchy, bool
         std::string result;
         // Loop through each line of each message
         for(int j = 0; j < section->lines->size; j++)    {
-            HMUI::InputFieldView* line = section->lines->get_Item(j);
+            HMUI::InputFieldView* line = reinterpret_cast<TextLineData*>(section->lines->get_Item(j))->lineSetting;
 
             // Find the text of this line
             std::string text = to_utf8(csstrtostr(line->text));
@@ -99,22 +106,9 @@ void CustomFailTextViewController::DidDeactivate(bool removedFromHierarchy, bool
             result += text;
         }
 
-        // Remove this tab if it was completely empty
-        if(result == "") {
-            messages->set_Item(i, nullptr); // Set this index to a nullptr to indicate it's been removed
-            getLogger().info("Removing section . . .");
-            removeAllChildren(section->layout->get_transform());
-            continue;
-        }
         getLogger().info("Adding fail message \"" + result + "\"");
         // Add each message to the array
         messagesArray.PushBack(rapidjson::Value().SetString(result, allocator), allocator);
-    }
-
-    // If there aren't any messages added, add a default one to avoid crashes
-    if(messagesArray.Size() == 0) {
-        AddMessage(il2cpp_utils::createcsstr(defaultMessage));
-        messagesArray.PushBack(rapidjson::Value().SetString(defaultMessage, allocator), allocator);
     }
 
     // Set the array in the config and write it to disk

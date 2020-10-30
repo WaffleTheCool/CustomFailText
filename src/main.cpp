@@ -33,6 +33,15 @@ void createConfig() {
     
 }
 
+// Removes all GameObjects that are children of the given transform - useful for removing large parts of a UI
+void removeAllChildren(UnityEngine::Transform* transform)   {
+    Array<UnityEngine::Transform*>* children =  transform->GetComponentsInChildren<UnityEngine::Transform*>();
+
+    for(int i = 0; i < children->Length(); i++)   {
+        UnityEngine::Object::Destroy(children->values[i]->get_gameObject());
+    }
+}
+
 // Chooses a random string from the given list in the config
 std::string findRandomFromConfigList(std::string listName)    {
     rapidjson::GenericArray list = getConfig().config[listName].GetArray();
@@ -81,12 +90,13 @@ extern "C" void load() {
 
     getLogger().info("Installing hooks...");
     il2cpp_functions::Init();
+    QuestUI::Init();
 
+    // Register our mod settings menu
     custom_types::Register::RegisterType<MessageSection>();
-    custom_types::Register::RegisterType<LineTextChangeData>();
+    custom_types::Register::RegisterType<TextLineData>();
     custom_types::Register::RegisterType<CustomFailTextViewController>();
 
-    QuestUI::Init();
     QuestUI::Register::RegisterModSettingsViewController<CustomFailTextViewController*>(modInfo);
 
     INSTALL_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, il2cpp_utils::FindMethodUnsafe("", "LevelFailedTextEffect", "ShowEffect", 0));
