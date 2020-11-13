@@ -77,7 +77,7 @@ const Logger& getLogger() {
 
 extern "C" void setup(ModInfo& info) {
     info.id = "custom-fail-text";
-    info.version = "0.1.6";
+    info.version = "0.1.7";
     modInfo = info;
     getLogger().info("Modloader name: %s", Modloader::getInfo().name.c_str());
     getConfig().Load();
