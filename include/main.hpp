@@ -27,7 +27,7 @@
 #include "UnityEngine/Object.hpp"
 
 Configuration& getConfig();
-const Logger& getLogger();
+Logger& getLogger();
 
 // Removes all the different UI components in the children of this transform
 // Useful for removing a large section of the UI

@@ -70,14 +70,14 @@ Configuration& getConfig() {
     return config;
 }
 
-const Logger& getLogger() {
-    static const Logger logger(modInfo);
-    return logger;
+Logger& getLogger() {
+    static Logger* logger = new Logger(modInfo);
+    return *logger;
 }
 
 extern "C" void setup(ModInfo& info) {
-    info.id = "custom-fail-text";
-    info.version = "0.1.7";
+    info.id = ID;
+    info.version = VERSION;
     modInfo = info;
     getLogger().info("Modloader name: %s", Modloader::getInfo().name.c_str());
     getConfig().Load();
@@ -99,6 +99,6 @@ extern "C" void load() {
 
     QuestUI::Register::RegisterModSettingsViewController<CustomFailTextViewController*>(modInfo);
 
-    INSTALL_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, il2cpp_utils::FindMethodUnsafe("", "LevelFailedTextEffect", "ShowEffect", 0));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), LevelFailedTextEffect_ShowEffect, il2cpp_utils::FindMethodUnsafe("", "LevelFailedTextEffect", "ShowEffect", 0));
     getLogger().info("Installed all hooks!");
 }
