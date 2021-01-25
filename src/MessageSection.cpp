@@ -5,7 +5,7 @@
 
 #include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
 
-#include "CustomFailTextViewController.hpp"
+#include "SettingsViewController.hpp"
 using namespace CustomFailText;
 
 DEFINE_CLASS(MessageSection);
@@ -89,7 +89,7 @@ void onLineDeleteButtonPress(TextLineData* data)    {
     if(numberOfLines == 0) {
         removeAllChildren(data->message->layout->get_rectTransform()); // Remove the UI section
 
-        CustomFailTextViewController* parent = reinterpret_cast<CustomFailTextViewController*>(data->message->parent);
+        SettingsViewController* parent = reinterpret_cast<SettingsViewController*>(data->message->parent);
         parent->messages->Remove(data->message); // Remove the message from the list
 
         parent->CheckMessageCount();

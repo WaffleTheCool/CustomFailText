@@ -3,7 +3,7 @@
 using namespace GlobalNamespace;
 using namespace TMPro;
 
-#include "CustomFailTextViewController.hpp"
+#include "SettingsViewController.hpp"
 #include "MessageSection.hpp"
 using namespace CustomFailText;
 
@@ -63,6 +63,13 @@ MAKE_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, void, LevelFailedTextEffe
     LevelFailedTextEffect_ShowEffect(self);
 }
 
+MAKE_HOOK_OFFSETLESS(StandardLevelGameplayManager_HandleGameEnergyDidReach0, void, StandardLevelGameplayManager* self) {
+    LevelFailedTextEffect* textEffect = UnityEngine::Resources::FindObjectsOfTypeAll<LevelFailedTextEffect*>()->values[0];
+    textEffect->ShowEffect();
+
+    StandardLevelGameplayManager_HandleGameEnergyDidReach0(self);
+}
+
 static ModInfo modInfo;
 Configuration& getConfig() {
     static Configuration config(modInfo);
@@ -93,12 +100,11 @@ extern "C" void load() {
     QuestUI::Init();
 
     // Register our mod settings menu
-    custom_types::Register::RegisterType<MessageSection>();
-    custom_types::Register::RegisterType<TextLineData>();
-    custom_types::Register::RegisterType<CustomFailTextViewController>();
+    custom_types::Register::RegisterTypes<SettingsViewController, TextLineData, MessageSection>();
 
-    QuestUI::Register::RegisterModSettingsViewController<CustomFailTextViewController*>(modInfo);
+    QuestUI::Register::RegisterModSettingsViewController<SettingsViewController*>(modInfo);
 
     INSTALL_HOOK_OFFSETLESS(getLogger(), LevelFailedTextEffect_ShowEffect, il2cpp_utils::FindMethodUnsafe("", "LevelFailedTextEffect", "ShowEffect", 0));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), StandardLevelGameplayManager_HandleGameEnergyDidReach0, il2cpp_utils::FindMethodUnsafe("", "StandardLevelGameplayManager", "HandleGameEnergyDidReach0", 0));
     getLogger().info("Installed all hooks!");
 }

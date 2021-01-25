@@ -1,4 +1,4 @@
-#include "CustomFailTextViewController.hpp"
+#include "SettingsViewController.hpp"
 
 #include "questui/shared/BeatSaberUI.hpp"
 #include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
@@ -17,21 +17,24 @@
 using namespace CustomFailText;
 using namespace QuestUI;
 
-DEFINE_CLASS(CustomFailTextViewController);
+DEFINE_CLASS(SettingsViewController);
 
 const char* defaultMessage = "REPLACE THIS";
 
 // Add a new message when the user presses the button
-void onAddMessageButtonClick(CustomFailTextViewController* self)    {
+void onAddMessageButtonClick(SettingsViewController* self)    {
     self->AddMessage(il2cpp_utils::createcsstr(defaultMessage));
 }
 
-void CustomFailTextViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)    {
+void SettingsViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)    {
     if(addedToHierarchy && firstActivation) {   
         getLogger().info("Initialising UI . . .");
 
         // Create a layout for storing our list of messages (inside a scroll view so we can fit as many as we want)
         UnityEngine::UI::VerticalLayoutGroup* mainLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(get_rectTransform());
+        mainLayout->set_childForceExpandHeight(false);
+        mainLayout->set_childControlHeight(true);
+        mainLayout->set_childAlignment(UnityEngine::TextAnchor::UpperCenter);
 
         // Make an action for when the add message button is pressed
         auto addMessageButtonClickAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction*>(
@@ -47,7 +50,7 @@ void CustomFailTextViewController::DidActivate(bool firstActivation, bool addedT
         this->addMessageButton = QuestUI::BeatSaberUI::CreateUIButton(addMesssageLayout->get_rectTransform(), "Add Message", "OkButton", addMessageButtonClickAction);
         
         this->messagesLayout = QuestUI::BeatSaberUI::CreateGridLayoutGroup(mainLayout->get_rectTransform());
-        messagesLayout->set_cellSize(UnityEngine::Vector2(60.0, 35.0));
+        messagesLayout->set_cellSize(UnityEngine::Vector2(60.0, 30.0));
         messagesLayout->set_constraint(UnityEngine::UI::GridLayoutGroup::Constraint::FixedColumnCount);
         messagesLayout->set_constraintCount(3);
         getLogger().info("Layouts created");
@@ -67,7 +70,7 @@ void CustomFailTextViewController::DidActivate(bool firstActivation, bool addedT
 }
 
 // Adds a new message layout to the UI
-void CustomFailTextViewController::AddMessage(Il2CppString* message)    {
+void SettingsViewController::AddMessage(Il2CppString* message)    {
     MessageSection* section = CRASH_UNLESS(il2cpp_utils::New<MessageSection*>(this, messagesLayout->get_rectTransform(), message));
     messages->Add(section);
     
@@ -75,7 +78,7 @@ void CustomFailTextViewController::AddMessage(Il2CppString* message)    {
 }
 
 // Enables/Disables the "Add Message" button depending on if we've reached the message limit
-void CustomFailTextViewController::CheckMessageCount()  {
+void SettingsViewController::CheckMessageCount()  {
     addMessageButton->get_gameObject()->SetActive(messages->size < UI_MESSAGE_LIMIT);
     // Add a generic message if there are no messages left
     if(messages->size == 0) {
@@ -84,7 +87,7 @@ void CustomFailTextViewController::CheckMessageCount()  {
 }
 
 // Upon deactivation, we sabe all messages in the UI back to the config
-void CustomFailTextViewController::DidDeactivate(bool removedFromHierarchy, bool systemScreenDisabling)    {
+void SettingsViewController::DidDeactivate(bool removedFromHierarchy, bool systemScreenDisabling)    {
     getLogger().info("Saving messages . . .");
     rapidjson::Document::AllocatorType& allocator = getConfig().config.GetAllocator();
     rapidjson::Value messagesArray(rapidjson::kArrayType);

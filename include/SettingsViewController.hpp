@@ -13,7 +13,7 @@
 
 using namespace System::Collections::Generic;
 
-DECLARE_CLASS_CODEGEN(CustomFailText, CustomFailTextViewController, HMUI::ViewController,
+DECLARE_CLASS_CODEGEN(CustomFailText, SettingsViewController, HMUI::ViewController,
     DECLARE_INSTANCE_FIELD(UnityEngine::UI::GridLayoutGroup*, messagesLayout);
     DECLARE_INSTANCE_FIELD(List<CustomFailText::MessageSection*>*, messages);
     DECLARE_INSTANCE_FIELD(UnityEngine::UI::Button*, addMessageButton);
@@ -23,7 +23,7 @@ DECLARE_CLASS_CODEGEN(CustomFailText, CustomFailTextViewController, HMUI::ViewCo
     DECLARE_METHOD(void, AddMessage, Il2CppString* message);
     DECLARE_METHOD(void, CheckMessageCount); // Hides the add message button if we have reached the message limit
     
-    REGISTER_FUNCTION(CustomFailTextViewController,
+    REGISTER_FUNCTION(SettingsViewController,
         REGISTER_FIELD(messagesLayout);
         REGISTER_FIELD(messages);
         REGISTER_FIELD(addMessageButton);
