@@ -9,10 +9,11 @@
 #include "beatsaber-hook/shared/utils/typedefs.h"
 #include "beatsaber-hook/shared/config/config-utils.hpp"
 
-#include "UnityEngine/MonoBehaviour.hpp"
 #include "GlobalNamespace/LevelFailedTextEffect.hpp"
 #include "GlobalNamespace/StandardLevelDetailView.hpp"
 #include "GlobalNamespace/StandardLevelGameplayManager.hpp"
+#include "GlobalNamespace/GameEnergyCounter.hpp"
+#include "GlobalNamespace/AudioTimeSyncController.hpp"
 #include "TMPro/TextMeshPro.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 #include "TMPro/TextOverflowModes.hpp"
@@ -20,6 +21,10 @@
 #include "UnityEngine/UI/Button.hpp"
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/Resources.hpp"
+#include "UnityEngine/Vector3.hpp"
+#include "UnityEngine/MonoBehaviour.hpp"
+#include "UnityEngine/Time.hpp"
+#include "System/Action.hpp"
 
 #include "custom-types/shared/register.hpp"
 #include "questui/shared/QuestUI.hpp"
