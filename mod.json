@@ -3,7 +3,7 @@
     "name": "CustomFailText",
     "id": "custom-fail-text",
     "author": "Lauriethefish",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "packageId": "com.beatgames.beatsaber",
     "packageVersion": "1.16.4",
     "modFiles": [
