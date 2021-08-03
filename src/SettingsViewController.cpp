@@ -17,7 +17,7 @@
 using namespace CustomFailText;
 using namespace QuestUI;
 
-DEFINE_CLASS(SettingsViewController);
+DEFINE_TYPE(CustomFailText, SettingsViewController);
 
 const char* defaultMessage = "REPLACE THIS";
 
@@ -36,18 +36,13 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
         mainLayout->set_childControlHeight(true);
         mainLayout->set_childAlignment(UnityEngine::TextAnchor::UpperCenter);
 
-        // Make an action for when the add message button is pressed
-        auto addMessageButtonClickAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction*>(
-                classof(UnityEngine::Events::UnityAction*),
-                this, onAddMessageButtonClick);
-
         // Button to add a new message
         UnityEngine::UI::HorizontalLayoutGroup* addMesssageLayout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(mainLayout->get_rectTransform());
         UnityEngine::UI::LayoutElement* element = addMesssageLayout->GetComponent<UnityEngine::UI::LayoutElement*>();
         element->set_preferredWidth(8.0);
         element->set_preferredHeight(8.0);
 
-        this->addMessageButton = QuestUI::BeatSaberUI::CreateUIButton(addMesssageLayout->get_rectTransform(), "Add Message", "OkButton", addMessageButtonClickAction);
+        this->addMessageButton = QuestUI::BeatSaberUI::CreateUIButton(addMesssageLayout->get_rectTransform(), "Add Message", "OkButton", [this](){onAddMessageButtonClick(this);});
         
         this->messagesLayout = QuestUI::BeatSaberUI::CreateGridLayoutGroup(mainLayout->get_rectTransform());
         messagesLayout->set_cellSize(UnityEngine::Vector2(60.0, 30.0));
@@ -64,7 +59,7 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
 
             // Add a message section for each
             this->AddMessage(il2cpp_utils::createcsstr(message));
-            getLogger().info("Created fail row with message \"" + message + "\"");
+            getLogger().info("Created fail row with message \"%s\"", message.c_str());
         }
     }
 }
@@ -109,7 +104,7 @@ void SettingsViewController::DidDeactivate(bool removedFromHierarchy, bool syste
             result += text;
         }
 
-        getLogger().info("Adding fail message \"" + result + "\"");
+        getLogger().info("Adding fail message \"%s\"", result.c_str());
         // Add each message to the array
         messagesArray.PushBack(rapidjson::Value().SetString(result, allocator), allocator);
     }

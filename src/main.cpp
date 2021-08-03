@@ -82,7 +82,7 @@ void createEffectCopy(LevelFailedTextEffect* effect) {
     preInstantiate = true;
 }
 
-MAKE_HOOK_OFFSETLESS(LevelFailedTextEffect_ShowEffect, void, LevelFailedTextEffect* self)    {
+MAKE_HOOK_MATCH(LevelFailedTextEffect_ShowEffect, &LevelFailedTextEffect::ShowEffect, void, LevelFailedTextEffect* self)    {
     getLogger().info("Setting level failed text . . .");
 
     // Spawn a bunch of failed messages in the case of cursed mode
@@ -116,7 +116,7 @@ void onEnergyDidReachZero() {
 }
 
 // Add an event for whenever the energy reaches zero to allow us to show the text even if bailed out
-MAKE_HOOK_OFFSETLESS(GameEnergyCounter_Start, void, GameEnergyCounter* self) {
+MAKE_HOOK_MATCH(GameEnergyCounter_Start, &GameEnergyCounter::Start, void, GameEnergyCounter* self) {
     self->add_gameEnergyDidReach0Event(il2cpp_utils::MakeDelegate<System::Action*>(
         classof(System::Action*), (Il2CppObject*) nullptr, onEnergyDidReachZero
     ));
@@ -124,7 +124,7 @@ MAKE_HOOK_OFFSETLESS(GameEnergyCounter_Start, void, GameEnergyCounter* self) {
     GameEnergyCounter_Start(self);
 }
 
-MAKE_HOOK_OFFSETLESS(AudioTimeSyncController_Update, void, AudioTimeSyncController* self) {
+MAKE_HOOK_MATCH(AudioTimeSyncController_Update, &AudioTimeSyncController::Update, void, AudioTimeSyncController* self) {
     float currentTime = UnityEngine::Time::get_time();
     // Check if it has been long enough to remove the text
     if(currentTime - energyCounterReachZeroTime > getConfig().config["bailoutTextDisappearTime"].GetFloat() && energyCounterReachZeroTime > 0) {
@@ -165,18 +165,12 @@ extern "C" void load() {
     QuestUI::Init();
 
     // Register our mod settings menu
-    custom_types::Register::RegisterTypes<
-        CustomFailText::TextLineData,
-        CustomFailText::MessageSection,
-        CustomFailText::SettingsFlowCoordinator,
-        CustomFailText::ExtraSettingsViewController,
-        CustomFailText::SettingsViewController
-    >();
+    custom_types::Register::AutoRegister();
 
     QuestUI::Register::RegisterModSettingsFlowCoordinator<CustomFailText::SettingsFlowCoordinator*>(modInfo);
 
-    INSTALL_HOOK_OFFSETLESS(getLogger(), LevelFailedTextEffect_ShowEffect, il2cpp_utils::FindMethodUnsafe("", "LevelFailedTextEffect", "ShowEffect", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), GameEnergyCounter_Start, il2cpp_utils::FindMethodUnsafe("", "GameEnergyCounter", "Start", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), AudioTimeSyncController_Update, il2cpp_utils::FindMethodUnsafe("", "AudioTimeSyncController", "Update", 0));
+    INSTALL_HOOK(getLogger(), LevelFailedTextEffect_ShowEffect);
+    INSTALL_HOOK(getLogger(), GameEnergyCounter_Start);
+    INSTALL_HOOK(getLogger(), AudioTimeSyncController_Update);
     getLogger().info("Installed all hooks!");
 }

@@ -8,8 +8,8 @@
 #include "SettingsViewController.hpp"
 using namespace CustomFailText;
 
-DEFINE_CLASS(MessageSection);
-DEFINE_CLASS(TextLineData);
+DEFINE_TYPE(CustomFailText, MessageSection);
+DEFINE_TYPE(CustomFailText, TextLineData);
 
 // Splits a string into a vector of strings by whenever splitCharacter is seen
 std::vector<std::string> split(const std::string str, char splitCharacter) {
@@ -39,10 +39,6 @@ void MessageSection::ctor(Il2CppObject* parent, UnityEngine::RectTransform* pare
 
     this->linesLayout = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(layout->get_rectTransform());
 
-    auto lineAddButtonClickAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction*>(
-                classof(UnityEngine::Events::UnityAction*),
-                this, onLineAddButtonClick);
-
     UnityEngine::UI::HorizontalLayoutGroup* lineAddButtonLayout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(layout->get_rectTransform());
     this->addLineButtonObj = lineAddButtonLayout->get_gameObject();
     
@@ -51,7 +47,7 @@ void MessageSection::ctor(Il2CppObject* parent, UnityEngine::RectTransform* pare
     addButtonElement->set_preferredHeight(8.0);
 
     // Make a button to add additional lines of text
-    QuestUI::BeatSaberUI::CreateUIButton(lineAddButtonLayout->get_rectTransform(), "Add Line", "OkButton", lineAddButtonClickAction);
+    QuestUI::BeatSaberUI::CreateUIButton(lineAddButtonLayout->get_rectTransform(), "Add Line", "OkButton", [this](){onLineAddButtonClick(this);});
 
     this->lines = List<Il2CppObject*>::New_ctor();
     // Add each line in the message
@@ -66,11 +62,10 @@ void MessageSection::ctor(Il2CppObject* parent, UnityEngine::RectTransform* pare
     }
 }
 
-void onLineTextChange(TextLineData* data, Il2CppString* newValue) {
+void onLineTextChange(TextLineData* data, std::string newValue) {
     // Change the string to upper case
-    std::string newValueString = to_utf8(csstrtostr(newValue));
     std::string result = "";
-    for(char letter : newValueString)   {
+    for(char letter : newValue)   {
         result += std::toupper(letter);
     }
 
@@ -111,22 +106,14 @@ void MessageSection::AddLine(Il2CppString* line)  {
     UnityEngine::UI::HorizontalLayoutGroup* lineLayout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(linesLayout->get_rectTransform());
     changeData->transform = lineLayout->get_rectTransform();
 
-    // Action for when the text changes
-    auto textChangeAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction_1<Il2CppString*>*>(
-        classof(UnityEngine::Events::UnityAction_1<Il2CppString*>*), changeData, onLineTextChange);
-
     getLogger().info("Creating string setting . . .");
     // Make a string setting and add it to the list
-    changeData->lineSetting = QuestUI::BeatSaberUI::CreateStringSetting(changeData->transform, "", to_utf8(csstrtostr(line)), textChangeAction);
+    changeData->lineSetting = QuestUI::BeatSaberUI::CreateStringSetting(changeData->transform, "", to_utf8(csstrtostr(line)), [changeData](std::string newValue){onLineTextChange(changeData, newValue);});
     changeData->lineSetting->GetComponent<UnityEngine::UI::LayoutElement*>()->set_preferredWidth(30.0f);
-
-    // Action for when the delete button is pressed
-    auto buttonClickAction = il2cpp_utils::MakeDelegate<UnityEngine::Events::UnityAction*>(
-        classof(UnityEngine::Events::UnityAction*), changeData, onLineDeleteButtonPress);
 
     getLogger().info("Creating delete button . . .");
     // Make a button with a limited width
-    UnityEngine::UI::Button* button = QuestUI::BeatSaberUI::CreateUIButton(changeData->transform, "Delete", buttonClickAction);
+    UnityEngine::UI::Button* button = QuestUI::BeatSaberUI::CreateUIButton(changeData->transform, "Delete", [changeData](){onLineDeleteButtonPress(changeData);});
     button->GetComponent<UnityEngine::UI::LayoutElement*>()->set_preferredWidth(6.0f);
 
     lines->Add(changeData);

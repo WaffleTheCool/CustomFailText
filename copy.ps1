@@ -1,10 +1,11 @@
-$NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
 
-$buildScript = "$NDKPath/build/ndk-build"
-if (-not ($PSVersionTable.PSEdition -eq "Core")) {
-    $buildScript += ".cmd"
+& $PSScriptRoot/build.ps1
+if ($?) {
+    adb push libs/arm64-v8a/libcustom-fail-text.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/libcustom-fail-text.so
+    if ($?) {
+        & $PSScriptRoot/restart-game.ps1
+        if ($args[0] -eq "--log") {
+            & $PSScriptRoot/start-logging.ps1
+        }
+    }
 }
-
-& $buildScript NDK_PROJECT_PATH=$PSScriptRoot APP_BUILD_SCRIPT=$PSScriptRoot/Android.mk NDK_APPLICATION_MK=$PSScriptRoot/Application.mk
-& adb push libs/arm64-v8a/libcustom-fail-text.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/libcustom-fail-text.so
-& adb shell am force-stop com.beatgames.beatsaber

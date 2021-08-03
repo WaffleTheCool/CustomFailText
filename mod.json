@@ -1,0 +1,15 @@
+{
+    "_QPVersion": "0.1.1",
+    "name": "CustomFailText",
+    "id": "custom-fail-text",
+    "author": "Lauriethefish",
+    "version": "0.1.8",
+    "packageId": "com.beatgames.beatsaber",
+    "packageVersion": "1.16.4",
+    "modFiles": [
+        "libcustom-fail-text.so"
+    ],
+    "libraryFiles": [
+        "libbeatsaber-hook_2_2_4.so"
+    ]
+}

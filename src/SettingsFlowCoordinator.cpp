@@ -9,7 +9,7 @@ using namespace QuestUI;
 #include "HMUI/ViewController_AnimationType.hpp"
 #include "HMUI/ViewController_AnimationDirection.hpp"
 
-DEFINE_CLASS(SettingsFlowCoordinator);
+DEFINE_TYPE(CustomFailText, SettingsFlowCoordinator);
 
 void SettingsFlowCoordinator::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
     if(!firstActivation) {return;}

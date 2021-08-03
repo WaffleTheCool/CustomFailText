@@ -20,16 +20,7 @@ DECLARE_CLASS_CODEGEN(CustomFailText, SettingsViewController, HMUI::ViewControll
 
     DECLARE_OVERRIDE_METHOD(void, DidActivate, il2cpp_utils::FindMethodUnsafe("HMUI", "ViewController", "DidActivate", 3), bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling);
     DECLARE_OVERRIDE_METHOD(void, DidDeactivate, il2cpp_utils::FindMethodUnsafe("HMUI", "ViewController", "DidDeactivate", 2), bool removedFromHierarchy, bool systemScreenDisabling);
-    DECLARE_METHOD(void, AddMessage, Il2CppString* message);
-    DECLARE_METHOD(void, CheckMessageCount); // Hides the add message button if we have reached the message limit
-    
-    REGISTER_FUNCTION(SettingsViewController,
-        REGISTER_FIELD(messagesLayout);
-        REGISTER_FIELD(messages);
-        REGISTER_FIELD(addMessageButton);
-        REGISTER_METHOD(DidActivate);
-        REGISTER_METHOD(DidDeactivate);
-        REGISTER_METHOD(AddMessage);
-    )
+    DECLARE_INSTANCE_METHOD(void, AddMessage, Il2CppString* message);
+    DECLARE_INSTANCE_METHOD(void, CheckMessageCount); // Hides the add message button if we have reached the message limit
 )
 
