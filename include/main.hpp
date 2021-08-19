@@ -18,6 +18,7 @@
 #include "TMPro/TextMeshPro.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 #include "TMPro/TextOverflowModes.hpp"
+#include "Polyglot/LocalizedTextMeshPro.hpp"
 #include "UnityEngine/UI/Button.hpp"
 #include "UnityEngine/UI/Button.hpp"
 #include "UnityEngine/Transform.hpp"
@@ -25,6 +26,8 @@
 #include "UnityEngine/Vector3.hpp"
 #include "UnityEngine/MonoBehaviour.hpp"
 #include "UnityEngine/Time.hpp"
+#include "UnityEngine/Random.hpp"
+#include "UnityEngine/Quaternion.hpp"
 #include "System/Action.hpp"
 
 #include "custom-types/shared/register.hpp"

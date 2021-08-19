@@ -71,11 +71,18 @@ bool preInstantiate = true; // Avoid recursively doing this!
 void createEffectCopy(LevelFailedTextEffect* effect) {
     preInstantiate = false;
     UnityEngine::GameObject* copy = UnityEngine::GameObject::Instantiate(effect->get_gameObject());
-    UnityEngine::Transform* transform = copy->GetComponent<TextMeshPro*>()->get_transform();
+    UnityEngine::Transform* transform = copy->get_transform();
     UnityEngine::Vector3 pos = transform->get_position();
-    pos.x += getRandomCursedOffset();
-    pos.z += getRandomCursedOffset();
-    pos.y += getRandomCursedOffset();
+    UnityEngine::Vector3 direction = UnityEngine::Random::get_insideUnitSphere();
+    direction.Normalize();
+    
+    getLogger().info("Creating effect copy . . .");
+    getLogger().info("Random direction: %f, %f, %f", direction.x, direction.y, direction.z);
+
+    transform->set_rotation(UnityEngine::Quaternion::LookRotation(direction, UnityEngine::Vector3::get_up()));
+    pos = pos + (direction * -15);
+    pos.z -= 10.0f;
+
     transform->set_position(pos);
 
     copy->GetComponent<LevelFailedTextEffect*>()->ShowEffect();
@@ -84,24 +91,33 @@ void createEffectCopy(LevelFailedTextEffect* effect) {
 
 MAKE_HOOK_MATCH(LevelFailedTextEffect_ShowEffect, &LevelFailedTextEffect::ShowEffect, void, LevelFailedTextEffect* self)    {
     getLogger().info("Setting level failed text . . .");
-
+    
     // Spawn a bunch of failed messages in the case of cursed mode
     if(getConfig().config["cursedMode"].GetBool() && preInstantiate)  { // Avoid recursively doing this!
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 500; i++) {
             createEffectCopy(self);
         }
     }
 
-    TextMeshPro* textMesh = self->GetComponent<TextMeshPro*>();
+    LevelFailedTextEffect_ShowEffect(self);
 
+    UnityEngine::Transform* textTransform = self->get_gameObject()->get_transform()->Find(il2cpp_utils::createcsstr("Text"));
+    TextMeshPro* textMesh = textTransform->GetComponent<TextMeshPro*>();
+
+    textTransform->get_gameObject()->set_active(true);
+
+    getLogger().info("Text is enabled: %d", textMesh->get_enabled());
+    getLogger().info("Text object is active: %d", textTransform->get_gameObject()->get_active());
+    getLogger().info("Current text: %s", to_utf8(csstrtostr(textMesh->get_text())).c_str());
     std::string failMessage = findRandomFromConfigList("loseMessages");
-    textMesh->SetText(il2cpp_utils::createcsstr(failMessage));
+    getLogger().info("Setting to %s", failMessage.c_str());
+
+    textMesh->set_text(il2cpp_utils::createcsstr(failMessage));
     textMesh->set_fontSize(getConfig().config["textSize"].GetFloat());
     textMesh->set_overflowMode(TextOverflowModes::Overflow);
     textMesh->set_enableWordWrapping(false);
-    getLogger().info("Text set successfully!");
 
-    LevelFailedTextEffect_ShowEffect(self);
+    getLogger().info("Text set successfully!");
 }
 
 // Show the LevelFailedTextEffect when we bail out if enabled
