@@ -73,14 +73,14 @@ void createEffectCopy(LevelFailedTextEffect* effect) {
     UnityEngine::GameObject* copy = UnityEngine::GameObject::Instantiate(effect->get_gameObject());
     UnityEngine::Transform* transform = copy->get_transform();
     UnityEngine::Vector3 pos = transform->get_position();
-    UnityEngine::Vector3 direction = UnityEngine::Random::get_insideUnitSphere();
+    UnityEngine::Vector3 direction = UnityEngine::Random::get_insideUnitSphere() * -1;
     direction.Normalize();
     
     getLogger().info("Creating effect copy . . .");
     getLogger().info("Random direction: %f, %f, %f", direction.x, direction.y, direction.z);
 
     transform->set_rotation(UnityEngine::Quaternion::LookRotation(direction, UnityEngine::Vector3::get_up()));
-    pos = pos + (direction * -15);
+    pos = pos + (direction * 15);
     pos.z -= 10.0f;
 
     transform->set_position(pos);
@@ -93,7 +93,9 @@ MAKE_HOOK_MATCH(LevelFailedTextEffect_ShowEffect, &LevelFailedTextEffect::ShowEf
     getLogger().info("Setting level failed text . . .");
     
     // Spawn a bunch of failed messages in the case of cursed mode
+    bool cursedMode = false;
     if(getConfig().config["cursedMode"].GetBool() && preInstantiate)  { // Avoid recursively doing this!
+        cursedMode = true;
         for(int i = 0; i < 200; i++) {
             createEffectCopy(self);
         }
@@ -116,7 +118,10 @@ MAKE_HOOK_MATCH(LevelFailedTextEffect_ShowEffect, &LevelFailedTextEffect::ShowEf
     textMesh->set_fontSize(getConfig().config["textSize"].GetFloat());
     textMesh->set_overflowMode(TextOverflowModes::Overflow);
     textMesh->set_enableWordWrapping(false);
-
+    
+    if(cursedMode) {
+        self->get_gameObject()->set_active(false);
+    }
     getLogger().info("Text set successfully!");
 }
 
@@ -144,7 +149,11 @@ MAKE_HOOK_MATCH(AudioTimeSyncController_Update, &AudioTimeSyncController::Update
     float currentTime = UnityEngine::Time::get_time();
     // Check if it has been long enough to remove the text
     if(currentTime - energyCounterReachZeroTime > getConfig().config["bailoutTextDisappearTime"].GetFloat() && energyCounterReachZeroTime > 0) {
-        UnityEngine::Resources::FindObjectsOfTypeAll<LevelFailedTextEffect*>()->values[0]->get_gameObject()->SetActive(false);
+        Array<LevelFailedTextEffect*>* textEffects = UnityEngine::Resources::FindObjectsOfTypeAll<LevelFailedTextEffect*>();
+        int textEffectsLength = textEffects->Length();
+        for(int i = 0; i < textEffectsLength; i++) {
+            textEffects->values[i]->get_gameObject()->set_active(false);
+        }
         energyCounterReachZeroTime = -1.0f; // Avoid removing it twice
     }
 
