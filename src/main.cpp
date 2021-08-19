@@ -94,7 +94,7 @@ MAKE_HOOK_MATCH(LevelFailedTextEffect_ShowEffect, &LevelFailedTextEffect::ShowEf
     
     // Spawn a bunch of failed messages in the case of cursed mode
     if(getConfig().config["cursedMode"].GetBool() && preInstantiate)  { // Avoid recursively doing this!
-        for(int i = 0; i < 500; i++) {
+        for(int i = 0; i < 200; i++) {
             createEffectCopy(self);
         }
     }
