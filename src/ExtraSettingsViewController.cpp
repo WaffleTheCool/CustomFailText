@@ -19,9 +19,12 @@ void onBailoutTextDisappearTimeChange(float newValue) {
     getConfig().config["bailoutTextDisappearTime"] = newValue;
 }
 
+// Text size disabled as the game has better formatting for fail messages now
+/*
 void onTextSizeChange(float newValue) {
     getConfig().config["textSize"] = newValue;
 }
+*/
 
 void onCursedModeChange(bool newValue) {
     getConfig().config["cursedMode"] = newValue;
@@ -40,7 +43,9 @@ void ExtraSettingsViewController::DidActivate(bool firstActivation, bool addedTo
 
     BeatSaberUI::CreateIncrementSetting(layout->get_rectTransform(), "Bailout Text Disappear Time (seconds)", 1, 0.1, getConfig().config["bailoutTextDisappearTime"].GetFloat(), 0.1, 20, onBailoutTextDisappearTimeChange);
 
-    BeatSaberUI::CreateIncrementSetting(layout->get_rectTransform(), "Text Size (default 14)", 1, 0.5, getConfig().config["textSize"].GetFloat(), 1, 20, onTextSizeChange);
+    // Text size disabled as the game has better formatting for fail messages now
+    //BeatSaberUI::CreateIncrementSetting(layout->get_rectTransform(), "Text Size (default 14)", 1, 0.5, getConfig().config["textSize"].GetFloat(), 1, 20, onTextSizeChange);
+    
 
     UnityEngine::GameObject* curseModeObj = BeatSaberUI::CreateToggle(layout->get_rectTransform(), "Cursed Mode", getConfig().config["cursedMode"].GetBool(), onCursedModeChange)->get_gameObject();
 

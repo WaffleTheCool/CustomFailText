@@ -115,7 +115,10 @@ MAKE_HOOK_MATCH(LevelFailedTextEffect_ShowEffect, &LevelFailedTextEffect::ShowEf
     getLogger().info("Setting to %s", failMessage.c_str());
 
     textMesh->set_text(il2cpp_utils::createcsstr(failMessage));
-    textMesh->set_fontSize(getConfig().config["textSize"].GetFloat());
+
+    // Text size disabled as the game has better formatting for fail messages now
+    //textMesh->set_fontSize(getConfig().config["textSize"].GetFloat());
+    
     textMesh->set_overflowMode(TextOverflowModes::Overflow);
     textMesh->set_enableWordWrapping(false);
     
