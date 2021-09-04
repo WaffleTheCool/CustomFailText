@@ -6,11 +6,11 @@
     "version": "0.1.9",
     "packageId": "com.beatgames.beatsaber",
     "coverImage": "cover.png",
-    "packageVersion": "1.16.4",
+    "packageVersion": "1.17.0",
     "modFiles": [
         "libcustom-fail-text.so"
     ],
     "libraryFiles": [
-        "libbeatsaber-hook_2_2_5.so"
+        "libbeatsaber-hook_2_3_0.so"
     ]
 }

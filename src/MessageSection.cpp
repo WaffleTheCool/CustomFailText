@@ -108,7 +108,7 @@ void MessageSection::AddLine(Il2CppString* line)  {
 
     getLogger().info("Creating string setting . . .");
     // Make a string setting and add it to the list
-    changeData->lineSetting = QuestUI::BeatSaberUI::CreateStringSetting(changeData->transform, "", to_utf8(csstrtostr(line)), [changeData](std::string newValue){onLineTextChange(changeData, newValue);});
+    changeData->lineSetting = QuestUI::BeatSaberUI::CreateStringSetting(changeData->transform, "", to_utf8(csstrtostr(line)), [changeData](std::string_view newValue){onLineTextChange(changeData, std::string(newValue));});
     changeData->lineSetting->GetComponent<UnityEngine::UI::LayoutElement*>()->set_preferredWidth(30.0f);
 
     getLogger().info("Creating delete button . . .");
