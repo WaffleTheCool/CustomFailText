@@ -5,6 +5,7 @@
     "author": "Lauriethefish",
     "version": "0.1.11",
     "packageId": "com.beatgames.beatsaber",
+    "description": "Allows you to customise the text that you see when you fail a level.",
     "coverImage": "cover.png",
     "packageVersion": "1.17.1",
     "modFiles": [
