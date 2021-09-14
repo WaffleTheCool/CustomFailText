@@ -3,7 +3,7 @@
     {
       "defines": [
         "MOD_ID=\"custom-fail-text\"",
-        "VERSION=\"0.1.10\"",
+        "VERSION=\"0.1.11\"",
         "__GNUC__",
         "__aarch64__",
         "ID=\"custom-fail-text\""
