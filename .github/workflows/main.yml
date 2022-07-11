@@ -1,8 +1,10 @@
-name: NDK build
+
+
+name: NDK Build
 
 env:
-    module_id: custom-fail-text
-    qmodName: CustomFailText
+    module_id: custom-miss-text
+    qmodName: CustomMissText
 
 on:
   workflow_dispatch:
@@ -70,6 +72,9 @@ jobs:
     - name: Apply Legacy Fix
       run: |
         ./QPM/qpm-rust cache legacy-fix
+    - name: Create mod.json templatw
+      run: |
+         ./QPM/qpm-rust qmod create
     - name: Build
       run: |
         cd ${GITHUB_WORKSPACE}
