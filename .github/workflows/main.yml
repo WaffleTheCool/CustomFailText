@@ -35,15 +35,15 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
-        workflow: cargo-build.yml
-        name: linux-qpm-rust
+        workflow: main.yml
+        name: QPM-ubuntu-x64
         path: QPM
-        repo: RedBrumbler/QuestPackageManager-Rust
+        repo: sc2ad/QuestPackageManager
         
     - name: QPM Collapse
       run: |
-        chmod +x ./QPM/qpm-rust
-        ./QPM/qpm-rust collapse
+        chmod +x ./QPM/qpm-ubuntu-x64
+        ./QPM/qpm-ubuntu-x64 collapse
     
     - name: QPM Dependencies Cache
       id: cache-qpm-deps
@@ -59,7 +59,7 @@ jobs:
           ${{ runner.os }}-
     - name: QPM Restore
       run: |
-        ./QPM/qpm-rust restore
+        ./QPM/qpm-ubuntu-x64 restore
     - name: List Post Restore
       run: |
         echo includes:
@@ -69,16 +69,10 @@ jobs:
         echo cache:
         ls -la $HOME/.local/share/QPM-Rust/cache
         
-    - name: Apply Legacy Fix
-      run: |
-        ./QPM/qpm-rust cache legacy-fix
-    - name: Create mod.json templatw
-      run: |
-         ./QPM/qpm-rust qmod create
     - name: Build
       run: |
         cd ${GITHUB_WORKSPACE}
-        ./QPM/qpm-rust qmod build
+        ./QPM/qpm-ubuntu-x64 qmod build
         pwsh -Command ./build.ps1
     - name: Create Qmod
       run: |
